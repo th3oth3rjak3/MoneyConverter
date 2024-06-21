@@ -8,7 +8,7 @@ const (
 // Currency represents a currency code that follows the ISO 4217 standard. e.g. USD, EUR, etc.
 type Currency struct {
 	code      string
-	precision byte
+	precision uint8
 }
 
 // ParseCurrency parses a string representation of a currency code and returns a Currency.
@@ -27,6 +27,11 @@ func ParseCurrency(code string) (Currency, error) {
 	default:
 		return Currency{code: code, precision: 2}, nil
 	}
+}
+
+// String implements the Stringer interface
+func (c Currency) String() string {
+	return c.code
 }
 
 // validateCurrencyCode checks if the currency code is a valid ISO 4217 code.
