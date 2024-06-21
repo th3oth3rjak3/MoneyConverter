@@ -1,0 +1,10 @@
+
+Todo:
+  ☐ Define business language for money converter tool
+  ☐ Define cli args
+  ☐ Create a way to model the HTTP connection to the exchange rate api
+  ☐ Handle monetary conversions
+  ☐ Handle errors
+Feature Enhancements:
+  ☐ Add big number support for values greater than 10^12
+  ✔ Add zero decimal optimization. Example: 1.0 becomes Decimal{units: 10, precision: 1}, but could be Decimal{units: 1, precision: 0} @started(24-06-21 06:19) @done(24-06-21 06:26) @lasted(7m36s)
