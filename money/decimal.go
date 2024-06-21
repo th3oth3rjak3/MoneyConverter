@@ -28,7 +28,7 @@ type Decimal struct {
 func ParseDecimal(value string) (Decimal, error) {
 	intPart, fracPart, _ := strings.Cut(value, ".")
 
-	// maxDecimal is the number of digits in one trillion.
+	// maxDecimal is the number of digits in one trillion (10^12).
 	const maxDecimal = 12
 
 	if len(intPart) > maxDecimal {
