@@ -34,6 +34,11 @@ func (c Currency) String() string {
 	return c.code
 }
 
+// ISOCode returns the 3 letter ISO currency code.
+func (c Currency) ISOCode() string {
+	return c.code
+}
+
 // validateCurrencyCode checks if the currency code is a valid ISO 4217 code.
 // It currently uses a naive approach and only checks the length and character range.
 func validateCurrencyCode(code string) error {

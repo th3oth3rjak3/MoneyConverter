@@ -19,7 +19,7 @@ func TestApplyExchangeRate(t *testing.T) {
 				quantity: Decimal{units: 12300, precision: 2},
 				currency: Currency{code: "USD", precision: 2},
 			},
-			rate:     ExchangeRate(Decimal{units: 100, precision: 2}),
+			rate:     ExchangeRate(1.00),
 			currency: Currency{code: "TST", precision: 2},
 			want: Amount{
 				quantity: Decimal{units: 12300, precision: 2},
@@ -31,7 +31,7 @@ func TestApplyExchangeRate(t *testing.T) {
 				quantity: Decimal{units: 12300, precision: 2},
 				currency: Currency{code: "USD", precision: 2},
 			},
-			rate:     ExchangeRate(Decimal{units: 11111, precision: 4}),
+			rate:     ExchangeRate(1.1111),
 			currency: Currency{code: "TST", precision: 2},
 			want: Amount{
 				quantity: Decimal{units: 13666, precision: 2},
@@ -42,7 +42,10 @@ func TestApplyExchangeRate(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			got := applyExchangeRate(tc.in, tc.currency, tc.rate)
+			got, err := applyExchangeRate(tc.in, tc.currency, tc.rate)
+			if err != nil {
+				t.Errorf("not expecting an error: %s", err.Error())
+			}
 
 			if !reflect.DeepEqual(got, tc.want) {
 				t.Errorf("got: %#v, want: %#v", got, tc.want)

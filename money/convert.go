@@ -1,27 +1,35 @@
 package money
 
+import "fmt"
+
 // ExchangeRate represents a rate to convert from one currency to another.
-type ExchangeRate Decimal
+type ExchangeRate float64
 
 // Convert applies an exchange rate to convert an input amount to a target currency.
-func Convert(amount Amount, to Currency) (Amount, error) {
-	dec, err := ParseDecimal("2")
+func Convert(amount Amount, to Currency, rates exchangeRates) (Amount, error) {
+	exchangeRate, err := rates.FetchExchangeRate(amount.currency, to)
+	
 	if err != nil {
-		return Amount{}, nil
+		return Amount{}, fmt.Errorf("cannot get exchange rate: %w", err)
 	}
 
-	exchangeRate := ExchangeRate(dec)
+	amt, err := applyExchangeRate(amount, to, exchangeRate)
+	if err != nil {
+		return Amount{}, err
+	}
 
-	amt := applyExchangeRate(amount, to, exchangeRate)
 	return amt, nil
 }
 
 // applyExchangeRate returns a new Amount representing the input multiplied by the ExchangeRate.
 // The precision of the returned amount will match that of the target Currency.
 // This function does not guarantee that the output amount is supported.
-func applyExchangeRate(a Amount, target Currency, rate ExchangeRate) Amount {
-
-	converted := multiply(a.quantity, Decimal(rate))
+func applyExchangeRate(a Amount, target Currency, rate ExchangeRate) (Amount, error) {
+	decRate, err := ParseDecimal(fmt.Sprintf("%g", rate))
+	if err != nil {
+		return Amount{}, fmt.Errorf("could not convert exchange rate to decimal: %w", err)
+	}
+	converted := multiply(a.quantity, decRate)
 
 	switch {
 	case converted.precision > target.precision:
@@ -35,7 +43,7 @@ func applyExchangeRate(a Amount, target Currency, rate ExchangeRate) Amount {
 	return Amount{
 		currency: target,
 		quantity: converted,
-	}
+	}, nil
 }
 
 // multiply multiplies two Decimal values together to produce a new Decimal value.

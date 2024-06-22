@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/th3oth3rjak3/MoneyConverter/ecbank"
 	"github.com/th3oth3rjak3/MoneyConverter/money"
 )
 
@@ -46,7 +47,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	convertedAmount, err := money.Convert(fromAmount, targetCurrency)
+	bank := ecbank.EuropeanCentralBank{}
+	convertedAmount, err := money.Convert(fromAmount, targetCurrency, bank)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "Failed to convert currency: %s", err.Error())
 		os.Exit(1)
